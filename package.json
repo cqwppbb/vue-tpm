@@ -10,7 +10,9 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
     "@typescript-eslint/parser": "^6.4.0",
+    "axios": "^1.4.0",
     "element-plus": "^2.3.9",
     "pinia": "^2.1.4",
     "vue": "^3.3.4",
