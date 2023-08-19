@@ -15,11 +15,11 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/views/layout/LayoutContainer.vue'),
-      redirect: '/pm/push',
+      redirect: '/pm/status',
       children: [
         {
           path: '/pm/modify',
-          component: () => import('@/views/layout/LayoutContainer.vue'),
+          component: () => import('@/views/pm/PmModify.vue'),
         },
         {
           path: '/pm/push',
