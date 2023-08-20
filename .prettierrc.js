@@ -7,7 +7,7 @@ module.exports = {
 	// 一行最多多少个字符
 	printWidth: 150,
 	// 指定每个缩进级别的空格数
-	tabWidth: 2,
+	tabWidth: 4,
 	// 使用制表符而不是空格缩进行
 	useTabs: true,
 	// 在语句末尾是否需要分号
@@ -38,7 +38,7 @@ module.exports = {
 	// 指定HTML文件的全局空格敏感度 css\strict\ignore
 	htmlWhitespaceSensitivity: 'css',
 	// Vue文件脚本和样式标签缩进
-	vueIndentScriptAndStyle: false,
+	vueIndentScriptAndStyle: true,
 	//在 windows 操作系统中换行符通常是回车 (CR) 加换行分隔符 (LF)，也就是回车换行(CRLF)，
 	//然而在 Linux 和 Unix 中只使用简单的换行分隔符 (LF)。
 	//对应的控制字符为 "\n" (LF) 和 "\r\n"(CRLF)。auto意为保持现有的行尾
