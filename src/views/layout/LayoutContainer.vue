@@ -95,7 +95,8 @@ const handleCommand = async (key) => {
 		<el-container>
 			<el-header>
 				<div>
-					用户：<strong>{{ userStore.user.nickname || userStore.user.username }}</strong>
+<!--					用户：<strong>{{ userStore.user.nickname || userStore.user.username }}</strong>-->
+          {{userStore.user.username}}
 				</div>
 				<el-dropdown placement="bottom-end" @command="handleCommand">
 					<!-- 展示给用户，默认看到的 -->
