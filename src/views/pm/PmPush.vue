@@ -1,81 +1,98 @@
 <script setup>
 import { ref } from 'vue'
-import { Edit, Delete } from '@element-plus/icons-vue'
-import { GetPmPushService, PmConfirmService } from '../../api/pm'
-const pmlist = ref([])
-const loading = ref(false)
+
+import PmEdit from "@/views/pm/components/PmEdit.vue";
+import PmData from "@/views/pm/components/PmData.vue";
+// import {Delete, Edit} from "@element-plus/icons-vue";
+
+
 const dialog = ref()
+//
+// const onPmEdit = (row) => {
+//   dialog.value.open(row)
+// }
+// const onPmDelete = () => {
+//   console.log('删除PM')
+// }
 
-const GetPmPush = async () => {
-  loading.value = true
-  const res = await GetPmPushService()
-  pmlist.value = res.data.data
-  loading.value = false
-  console.log(res)
-}
-GetPmPush()
 
-const PmConfirm = async (row) => {
-  await ElMessageBox.confirm('你确认提交吗？', '温馨提示', {
-    type: 'warning',
-    confirmButtonText: '确认',
-    cancelButtonText: '取消'
-  })
-  await PmConfirmService(row.id)
-  ElMessage.success('提交成功')
-  GetPmPush()
+
+// const PmConfirm = async (res) => {
+//   console.log(res)
+//   await ElMessageBox.confirm('你确认提交吗？', '温馨提示', {
+//     type: 'warning',
+//     confirmButtonText: '确认',
+//     cancelButtonText: '取消'
+//   })
+//   await PmConfirmService(res.id)
+//   ElMessage.success('提交成功')
+//   PmPush()
+// }
+const PmConfirm = () => {
+
+    console.log('提交')
+
+
 }
-//                         预留2个按键
-const onEditChannel = (row) => {
-  dialog.value.open(row)
+const PmDownload = () => {
+  console.log('Download')
 }
-const onAddChannel = () => {
+const PmAd = () => {
   dialog.value.open({})
+  console.log('新增PM')
 }
+
+
 
 </script>
 
 <template>
-  <page-container title="推送PM作业">
+  <page-container title="PM推送">
     <template #extra>
-      <el-button @click="onAddChannel">导出Excel</el-button>
+      <el-button @click="PmDownload">导出Excel</el-button>
+      <el-button type="primary" @click="PmAd">新增</el-button>
+      <el-button type="primary" @click="PmConfirm">提交</el-button>
     </template>
+    <el-form  inline>
+      <el-form-item label="区域:">
+        <el-select>
+          <el-option label="CB" value="CB"></el-option>
+          <el-option label="CH" value="CH"></el-option>
+          <el-option label="CS" value="CS"></el-option>
+          <el-option label="AS" value="AS"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="设备:">
+        <el-select>
+          <el-option label="" value=""></el-option>
+          <el-option label="" value=""></el-option>
+          <el-option label="" value=""></el-option>
+          <el-option label="" value=""></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary">确认</el-button>
+      </el-form-item>
 
-    <el-table v-loading="loading" :data="pmlist" style="width: 100%">
-      <el-table-column type="index" label="序号" width="100"></el-table-column>
-      <el-table-column prop="area" label="区域"></el-table-column>
-      <el-table-column prop="op" label="设备"></el-table-column>
-      <el-table-column prop="pmcode" label="PM编号"></el-table-column>
-      <el-table-column prop="content" label="内容"></el-table-column>
-      <el-table-column prop="frequence" label="寿命"></el-table-column>
-      <el-table-column prop="alive" label="实时寿命"></el-table-column>
-      <el-table-column prop="done" label="完成情况"></el-table-column>
-        <!-- row 就是 channelList 的一项， $index 下标 -->
-      <el-table-column label="操作" width="150">
-        <!-- row 就是 channelList 的一项， $index 下标 -->
-        <template #default="{ row, $index }">
-          <el-button
-            :icon="Edit"
-            circle
-            plain
-            type="primary"
-            @click="onEditChannel(row, $index)"
-          ></el-button>
-          <el-button
-            :icon="Delete"
-            circle
-            plain
-            type="danger"
-            @click="PmConfirm(row, $index)"
-          ></el-button>
-        </template>
-      </el-table-column>
-
-      <template #empty>
-        <el-empty description="没有数据"></el-empty>
-      </template>
-    </el-table>
-
+    </el-form>
+    <PmData></PmData>
+    <PmEdit ref="dialog"></PmEdit>
+<!--    <template #default="{ row, $index }">-->
+<!--          <el-button-->
+<!--            :icon="Edit"-->
+<!--            circle-->
+<!--            plain-->
+<!--            type="primary"-->
+<!--            @click="onPmEdit(row, $index)"-->
+<!--          ></el-button>-->
+<!--          <el-button-->
+<!--            :icon="Delete"-->
+<!--            circle-->
+<!--            plain-->
+<!--            type="danger"-->
+<!--            @click="onPmDelete(row, $index)"-->
+<!--          ></el-button>-->
+<!--        </template>-->
   </page-container>
 </template>
 

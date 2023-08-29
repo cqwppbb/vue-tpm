@@ -1,18 +1,19 @@
 import request from '@/utils/request'
-// 分类：获取文章分类
-export const GetPmPushService = () => request.get('/api/pmpush')
-// 分类：添加文章分类
+export const PmPushService = () => request.get('/api/pmpush')
 export const PmConfirmService = (data) => request.post('/api/pmconfirm', data)
-// 分类：编辑文章分类
-export const artEditChannelService = (data) =>
+export const PmEditService = (data) => request.post('/api/pmedit', data)
+export const PmDeleteService = (data) => request.post('/api/pmdelete', data)
+export const PmAddService = (data) => request.post('/api/pmadd', data)
+
+
+
+export const EditPmService = (data) =>
   request.put('/my/cate/info', data)
-// 分类：删除文章分类
 export const artDelChannelService = (id) =>
   request.delete('/my/cate/del', {
     params: { id }
   })
 
-// 文章：获取文章列表
 export const artGetListService = (params) =>
   request.get('/my/article/list', {
     params
