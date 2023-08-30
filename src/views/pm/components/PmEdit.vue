@@ -30,7 +30,7 @@ const rules = {
 const emit = defineEmits(['success'])
 const onSubmit = async () => {
   await formRef.value.validate()
-  const isEdit = formModel.value.id
+  const isEdit = formModel.value.item
   console.log(formModel)
   if (isEdit) {
     await PmEditService(formModel.value)

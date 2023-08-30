@@ -1,9 +1,9 @@
 import request from '@/utils/request'
-export const PmPushService = () => request.get('/api/pmpush')
-export const PmConfirmService = (data) => request.post('/api/pmconfirm', data)
-export const PmEditService = (data) => request.post('/api/pmedit', data)
-export const PmDeleteService = (data) => request.post('/api/pmdelete', data)
-export const PmAddService = (data) => request.post('/api/pmadd', data)
+export const PmPushService = () => request.get('/pm/push')
+export const PmConfirmService = (data) => request.post('/pm/confirm', data)
+export const PmEditService = (data) => request.post('/pm/edit', data)
+export const PmDeleteService = (data) => request.post('/pm/delete', data)
+export const PmAddService = (data) => request.post('/pm/add', data)
 
 
 

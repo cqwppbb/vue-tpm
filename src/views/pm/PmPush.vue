@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref,provide } from 'vue'
 import PmEdit from "@/views/pm/components/PmEdit.vue";
 import PmData from "@/views/pm/components/PmData.vue";
 import {Finished} from "@element-plus/icons-vue";
@@ -9,11 +9,13 @@ const dialog = ref()
 
 
 const onPmFinish = (data) => {
+   data.index
   console.log(data.index)
   // console.log(index)
   console.log('完成PM')
 }
 
+provide('sefPmFinish', onPmFinish)
 
 
 // const PmConfirm = async (res) => {
