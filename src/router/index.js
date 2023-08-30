@@ -17,7 +17,7 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/views/layout/LayoutContainer.vue'),
-      redirect: '/pm/status',
+      redirect: '/pm/push',
       children: [
         {
           path: '/pm/modify',

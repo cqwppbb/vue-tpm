@@ -1,19 +1,18 @@
 <script setup>
 import { ref } from 'vue'
-
 import PmEdit from "@/views/pm/components/PmEdit.vue";
 import PmData from "@/views/pm/components/PmData.vue";
-// import {Delete, Edit} from "@element-plus/icons-vue";
+import {Finished} from "@element-plus/icons-vue";
 
 
 const dialog = ref()
-//
-// const onPmEdit = (row) => {
-//   dialog.value.open(row)
-// }
-// const onPmDelete = () => {
-//   console.log('删除PM')
-// }
+
+
+const onPmFinish = (data) => {
+  console.log(data.index)
+  // console.log(index)
+  console.log('完成PM')
+}
 
 
 
@@ -28,18 +27,9 @@ const dialog = ref()
 //   ElMessage.success('提交成功')
 //   PmPush()
 // }
-const PmConfirm = () => {
 
-    console.log('提交')
-
-
-}
 const PmDownload = () => {
   console.log('Download')
-}
-const PmAd = () => {
-  dialog.value.open({})
-  console.log('新增PM')
 }
 
 
@@ -50,8 +40,6 @@ const PmAd = () => {
   <page-container title="PM推送">
     <template #extra>
       <el-button @click="PmDownload">导出Excel</el-button>
-      <el-button type="primary" @click="PmAd">新增</el-button>
-      <el-button type="primary" @click="PmConfirm">提交</el-button>
     </template>
     <el-form  inline>
       <el-form-item label="区域:">
@@ -75,24 +63,19 @@ const PmAd = () => {
       </el-form-item>
 
     </el-form>
-    <PmData></PmData>
+    <PmData>
+      <template #default='data'>
+          <el-button
+            :icon="Finished"
+            circle
+            plain
+            type="primary"
+            @click="onPmFinish(data)"
+          ></el-button>
+        </template>
+    </PmData>
     <PmEdit ref="dialog"></PmEdit>
-<!--    <template #default="{ row, $index }">-->
-<!--          <el-button-->
-<!--            :icon="Edit"-->
-<!--            circle-->
-<!--            plain-->
-<!--            type="primary"-->
-<!--            @click="onPmEdit(row, $index)"-->
-<!--          ></el-button>-->
-<!--          <el-button-->
-<!--            :icon="Delete"-->
-<!--            circle-->
-<!--            plain-->
-<!--            type="danger"-->
-<!--            @click="onPmDelete(row, $index)"-->
-<!--          ></el-button>-->
-<!--        </template>-->
+
   </page-container>
 </template>
 
