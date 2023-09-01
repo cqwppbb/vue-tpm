@@ -1,22 +1,38 @@
 <script setup>
-import { ref,provide } from 'vue'
-import PmEdit from "@/views/pm/components/PmEdit.vue";
-import PmData from "@/views/pm/components/PmData.vue";
-import {Finished} from "@element-plus/icons-vue";
-
+import { ref } from 'vue'
+import PmEdit from '@/views/pm/components/PmEdit.vue'
+import PmData from '@/views/pm/components/PmData.vue'
+import { Finished } from '@element-plus/icons-vue'
+import { PmConfirmService} from "@/api/pm";
+import {PmPushService} from "@/api/pm";
+const PmList = ref([])
+const loading = ref(false)
 
 const dialog = ref()
+const area = ref('')
+const station = ref('')
 
+const PmPush = async () => {
+  loading.value = true
+  const  data ={
+    area: area.value,
+    station: station.value
+  }
+  const res = await PmPushService(data)
+  PmList.value = res.data.data
+  loading.value = false
+}
+PmPush()
+const onPmFinish = async (data) => {
+  data.index
+  await PmConfirmService(data.row)
 
-const onPmFinish = (data) => {
-   data.index
-  console.log(data.index)
-  // console.log(index)
-  console.log('完成PM')
+  PmPush()
 }
 
-provide('sefPmFinish', onPmFinish)
-
+const formConfirm = async () => {
+  PmPush()
+}
 
 // const PmConfirm = async (res) => {
 //   console.log(res)
@@ -33,9 +49,6 @@ provide('sefPmFinish', onPmFinish)
 const PmDownload = () => {
   console.log('Download')
 }
-
-
-
 </script>
 
 <template>
@@ -45,39 +58,36 @@ const PmDownload = () => {
     </template>
     <el-form  inline>
       <el-form-item label="区域:">
-        <el-select>
-          <el-option label="CB" value="CB"></el-option>
-          <el-option label="CH" value="CH"></el-option>
-          <el-option label="CS" value="CS"></el-option>
-          <el-option label="AS" value="AS"></el-option>
+        <el-select v-model="area">
+          <el-option label="CB" value="block"></el-option>
+          <el-option label="CH" value="head"></el-option>
+          <el-option label="CS" value="crank"></el-option>
+          <el-option label="AS" value="as"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="设备:">
-        <el-select>
-          <el-option label="" value=""></el-option>
-          <el-option label="" value=""></el-option>
-          <el-option label="" value=""></el-option>
-          <el-option label="" value=""></el-option>
-        </el-select>
+        <el-input v-model="station" placeholder="输入设备OP">
+        </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">确认</el-button>
+        <el-button @click="formConfirm" type="primary">确认</el-button>
       </el-form-item>
-
     </el-form>
-    <PmData>
-      <template #default='data'>
-          <el-button
-            :icon="Finished"
-            circle
-            plain
-            type="primary"
-            @click="onPmFinish(data)"
-          ></el-button>
-        </template>
+    <PmData :data="PmList" v-loading="loading">
+      <template #cols>
+        <el-table-column prop="life" label="实际寿命"></el-table-column>
+      </template>
+      <template  #operate="data">
+        <el-button
+          :icon="Finished"
+          circle
+          plain
+          type="primary"
+          @click="onPmFinish(data)"
+        ></el-button>
+      </template>
     </PmData>
     <PmEdit ref="dialog"></PmEdit>
-
   </page-container>
 </template>
 

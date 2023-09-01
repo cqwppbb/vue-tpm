@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-export const PmPushService = () => request.get('/pm/push')
+export const PmPushService = (data) => request.post('/pm/push',data)
 export const PmConfirmService = (data) => request.post('/pm/confirm', data)
 export const PmEditService = (data) => request.post('/pm/edit', data)
 export const PmDeleteService = (data) => request.post('/pm/delete', data)
