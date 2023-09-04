@@ -5,6 +5,7 @@ import {ref} from "vue";
 // const loading = ref(false)
 const TableData = ref({})
 
+
 // const PmPush = async () => {
 //   loading.value = true
 //   const res = await PmPushService()
@@ -16,12 +17,12 @@ const TableData = ref({})
 </script>
 <template>
 <el-table   stripe border    ref="TableData"  style="width: 100%">
-<!--      <el-table-column type="selection" select="selected" width="55" />-->
+  <el-table-column select="selected" type="selection"/>
       <el-table-column type="index" label="序号"  ></el-table-column>
       <el-table-column prop="area" label="区域"></el-table-column>
       <el-table-column prop="station" width="120" label="设备"></el-table-column>
       <el-table-column prop="item" label="PM编号"></el-table-column>
-      <el-table-column prop="detail" label="内容" width="600"></el-table-column>
+  <el-table-column label="内容" prop="detail" width="300"></el-table-column>
       <el-table-column prop="frequency" label="频次"></el-table-column>
       <el-table-column prop="type" label="类型"></el-table-column>
       <slot name="cols">
@@ -42,11 +43,14 @@ const TableData = ref({})
         <!-- row 就是 channelList 的一项， $index 下标 -->
 
       </el-table-column>
-      <template #empty>
+
+  <template #empty>
         <el-empty description="没有数据"></el-empty>
       </template>
 
     </el-table>
+
+
 </template>
 
 <style scoped lang="scss">

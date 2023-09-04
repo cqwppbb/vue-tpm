@@ -1,12 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import {ref} from 'vue'
 import PmEdit from "@/views/pm/components/PmEdit.vue";
 import PmData from "@/views/pm/components/PmData.vue";
 import {Delete, Edit} from "@element-plus/icons-vue";
 
 
 const dialog = ref()
-
 
 
 const PmDownload = () => {
@@ -34,7 +33,7 @@ const onPmDelete = (obj) => {
       <el-button @click="PmDownload">导出Excel</el-button>
       <el-button type="primary" @click="PmAdd">新增</el-button>
     </template>
-    <el-form  inline>
+    <el-form inline>
       <el-form-item label="区域:">
         <el-select>
           <el-option label="CB" value="CB"></el-option>
@@ -58,21 +57,21 @@ const onPmDelete = (obj) => {
     </el-form>
     <PmData>
       <template #default="obj">
-          <el-button
+        <el-button
             :icon="Edit"
             circle
             plain
             type="primary"
             @click="onPmEdit(obj)"
-          ></el-button>
-          <el-button
+        ></el-button>
+        <el-button
             :icon="Delete"
             circle
             plain
             type="danger"
             @click="onPmDelete(obj)"
-          ></el-button>
-        </template>
+        ></el-button>
+      </template>
     </PmData>
     <PmEdit ref="dialog"></PmEdit>
 
