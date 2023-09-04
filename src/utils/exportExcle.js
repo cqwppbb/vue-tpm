@@ -1,8 +1,14 @@
 import FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 
-const exportExcel = (filename) => {
-    let wb = XLSX.utils.table_to_book(document.querySelector("#table"));
+const exportExcel = (data,filename) => {
+    let ls =[]
+    for(let i in data.value) {
+        ls.push(data.value[i])
+    }
+    let ws = XLSX.utils.json_to_sheet(ls);
+    let wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws);
     let wbout = XLSX.write(wb, {
         bookType: "xlsx",
         bookSST: true,

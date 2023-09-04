@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue'
-import { PmEditService, PmDeleteService } from '../../../api/pm.js'
+import {ref} from 'vue'
+import {PmDeleteService, PmEditService} from '../../../api/pm.js'
 
 const dialogVisible = ref(false)
 const formRef = ref()
@@ -10,7 +10,7 @@ const formModel = ref({
 })
 const rules = {
   item: [
-    { required: true, message: '请输入分类名称', trigger: 'blur' },
+    {required: true, message: '请输入分类名称', trigger: 'blur'},
     {
       pattern: /^\S{1,10}$/,
       message: '分类名必须是 1-10 位的非空字符',
@@ -18,7 +18,7 @@ const rules = {
     }
   ],
   frequency: [
-    { required: true, message: '请输入分类别名', trigger: 'blur' },
+    {required: true, message: '请输入分类别名', trigger: 'blur'},
     {
       pattern: /^[a-zA-Z0-9]{1,15}$/,
       message: '分类名必须是 1-15 位的字母或数字',
@@ -49,7 +49,7 @@ const onSubmit = async () => {
 // open调用后，可以打开弹窗
 const open = (row) => {
   dialogVisible.value = true
-  formModel.value = { ...row } // 添加 → 重置了表单内容，编辑 → 存储了需要回显的数据
+  formModel.value = {...row} // 添加 → 重置了表单内容，编辑 → 存储了需要回显的数据
   console.log(formModel.value)
 }
 
@@ -62,47 +62,47 @@ defineExpose({
 
 <template>
   <el-dialog
-    v-model="dialogVisible"
-    :title="formModel.area ? '修改PM' : '新增PM'"
-    width="30%"
+      v-model="dialogVisible"
+      :title="formModel.area ? '修改PM' : '新增PM'"
+      width="30%"
   >
     <el-form
-      ref="formRef"
-      :model="formModel"
-      :rules="rules"
-      label-width="100px"
-      style="padding-right: 30px"
+        ref="formRef"
+        :model="formModel"
+        :rules="rules"
+        label-width="100px"
+        style="padding-right: 30px"
     >
       <el-form-item label="区域" prop="area">
         <el-input
-          v-model="formModel.area"
-          placeholder=""
+            v-model="formModel.area"
+            placeholder=""
         ></el-input>
       </el-form-item>
       <el-form-item label="设备" prop="station">
         <el-input
-          v-model="formModel.station"
-          placeholder=""
+            v-model="formModel.station"
+            placeholder=""
         ></el-input>
       </el-form-item>
       <el-form-item label="PM编号" prop="item">
         <el-input
-          v-model="formModel.item"
-          placeholder=""
+            v-model="formModel.item"
+            placeholder=""
         ></el-input>
       </el-form-item>
       <el-form-item label="内容" prop="detail">
         <el-input
             type="textarea"
             :rows="3"
-          v-model="formModel.detail"
-          placeholder=""
+            v-model="formModel.detail"
+            placeholder=""
         ></el-input>
       </el-form-item>
       <el-form-item label="寿命" prop="frequency">
         <el-input
-          v-model="formModel.frequency"
-          placeholder=""
+            v-model="formModel.frequency"
+            placeholder=""
         ></el-input>
       </el-form-item>
     </el-form>

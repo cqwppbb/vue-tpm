@@ -6,7 +6,6 @@ import {Finished} from '@element-plus/icons-vue'
 import {PmConfirmService, PmPushService} from "@/api/pm";
 import {exportExcel} from "../../utils/exportExcle";
 
-
 const PmList = ref([])
 const PmTotal = ref(0)
 const loading = ref(false)
@@ -16,12 +15,13 @@ const area = ref('')
 const station = ref('')
 const params = ref({
   pagenum: 1,
-  pagesize: 5,
+  pagesize: 10,
   id: '',
   state: '',
   area: '',
   station: '',
 })
+const DownloadData = ref([])
 const PmPush = async () => {
   loading.value = true
   params.value.area = area.value
@@ -53,16 +53,17 @@ const onCurrentChange = (size) => {
   PmPush()
   console.log('当前页页数', size)
 }
-
 const PmDownload = async () => {
-  await ElMessageBox.confirm('你确认提交吗？', '温馨提示', {
+  await ElMessageBox.confirm('你确认下载吗？', '温馨提示', {
     type: 'warning',
     confirmButtonText: '确认',
     cancelButtonText: '取消'
   })
-  exportExcel('PM数据.xlsx')
+  exportExcel(DownloadData,'PM数据.xlsx')
 }
-
+const handleSelectionChange =(val) => {
+  DownloadData.value = val
+}
 
 </script>
 
@@ -88,10 +89,11 @@ const PmDownload = async () => {
         <el-button @click="formConfirm" type="primary">确认</el-button>
       </el-form-item>
     </el-form>
-    <PmData id="table" ref="PmTable" v-loading="loading" :data="PmList" class="Pmdata">
+    <PmData @selection-change="handleSelectionChange" id="table" ref="PmTable" v-loading="loading" :data="PmList" class="Pmdata">
       <template #cols>
-        <el-table-column prop="life" label="实际寿命"></el-table-column>
+        <el-table-column prop="life" width="100" label="寿命"></el-table-column>
       </template>
+
       <template  #operate="data">
         <el-button
             :icon="Finished"
@@ -106,7 +108,7 @@ const PmDownload = async () => {
         v-model:current-page="params.pagenum"
         v-model:page-size="params.pagesize"
         :background="true"
-        :page-sizes="[5, 10, 15, 20]"
+        :page-sizes="[10, 15, 20, 25,50,PmTotal]"
         :total="PmTotal"
         layout="total, sizes, prev, pager, next, jumper"
         style="margin-top: 20px; justify-content: flex-end"
