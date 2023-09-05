@@ -2,8 +2,8 @@
 import {ref} from 'vue'
 import PmEdit from '@/views/pm/components/PmEdit.vue'
 import PmData from '@/views/pm/components/PmData.vue'
-import {Delete, Edit} from '@element-plus/icons-vue'
-import { PmDeleteService, PmEditService, PmPushService} from "@/api/pm";
+import {Delete, Edit, Plus} from '@element-plus/icons-vue'
+import {PmDataService, PmDeleteService, PmEditService} from "@/api/pm";
 import {exportExcel} from "../../utils/exportExcle";
 
 const PmList = ref([])
@@ -22,16 +22,16 @@ const params = ref({
   station: '',
 })
 const DownloadData = ref([])
-const PmPush = async () => {
+const GetPmData = async () => {
   loading.value = true
   params.value.area = area.value
   params.value.station = station.value
-  const res = await PmPushService(params.value)
+  const res = await PmDataService(params.value)
   PmList.value = res.data.data
   PmTotal.value = res.data.total
   loading.value = false
 }
-PmPush()
+GetPmData()
 const onPmEdit = async (data) => {
   data.index
   dialog.value.open(data.row)
@@ -47,17 +47,17 @@ const onPmDelete = async (data) => {
 }
 
 const formConfirm = async () => {
-  PmPush()
+  GetPmData()
 }
 
 const onSizeChange = (size) => {
   params.value.pagenum = 1
   params.value.pagesize = size
-  PmPush()
+  GetPmData()
 }
 const onCurrentChange = (size) => {
   params.value.pagenum = size
-  PmPush()
+  GetPmData()
   console.log('当前页页数', size)
 }
 const PmDownload = async () => {
@@ -66,16 +66,16 @@ const PmDownload = async () => {
     confirmButtonText: '确认',
     cancelButtonText: '取消'
   })
-  exportExcel(DownloadData,'PM数据.xlsx')
+  exportExcel(DownloadData, 'PM数据.xlsx')
 }
-const handleSelectionChange =(val) => {
+const handleSelectionChange = (val) => {
   DownloadData.value = val
 }
 
 </script>
 
 <template>
-  <page-container title="PM推送">
+  <page-container title="PM更改">
     <template #extra>
       <el-button @click="PmDownload">导出Excel</el-button>
     </template>
@@ -96,25 +96,30 @@ const handleSelectionChange =(val) => {
         <el-button @click="formConfirm" type="primary">确认</el-button>
       </el-form-item>
     </el-form>
-    <PmData @selection-change="handleSelectionChange" id="table" ref="PmTable" v-loading="loading" :data="PmList" class="Pmdata">
+    <PmData
+        @selection-change="handleSelectionChange"
+        id="table" ref="PmTable"
+        v-loading="loading"
+        :data="PmList"
+        class="Pmdata">
       <template #cols>
         <el-table-column prop="life" width="100" label="寿命"></el-table-column>
-        <el-table-column prop="val_last" width="90" label="上次寿命"></el-table-column>
-        <el-table-column prop="val_current" width="90" label="实时寿命"></el-table-column>
-        <el-table-column prop="time_last" width="120" label="上次时间"></el-table-column>
-        <el-table-column prop="time_last" width="120" label="当前时间"></el-table-column>
-        <el-table-column prop="life" width="90" label="实际寿命"></el-table-column>
-        <el-table-column prop="push" width="90" label="推送"></el-table-column>
-        <el-table-column prop="done" width="90" label="完成情况"></el-table-column>
       </template>
 
-      <template  #operate="data">
+      <template #operate="data">
         <el-button
             :icon="Edit"
             circle
             plain
             type="primary"
             @click="onPmEdit(data)"
+        ></el-button>
+        <el-button
+            :icon="Plus"
+            circle
+            plain
+            type="primary"
+            @click="onPmAdd(data)"
         ></el-button>
         <el-button
             :icon="Delete"
@@ -132,7 +137,8 @@ const handleSelectionChange =(val) => {
         :page-sizes="[10, 15, 20, 25,50,PmTotal]"
         :total="PmTotal"
         layout="total, sizes, prev, pager, next, jumper"
-        style="margin-top: 20px; justify-content: flex-end"
+        style="margin-top: 20px;
+        justify-content: flex-end"
         @size-change="onSizeChange"
         @current-change="onCurrentChange"
     />

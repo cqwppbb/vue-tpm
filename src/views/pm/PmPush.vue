@@ -5,6 +5,7 @@ import PmData from '@/views/pm/components/PmData.vue'
 import {Finished} from '@element-plus/icons-vue'
 import {PmConfirmService, PmPushService} from "@/api/pm";
 import {exportExcel} from "../../utils/exportExcle";
+import {PmUpdateDataService} from "@/api/pm";
 
 const PmList = ref([])
 const PmTotal = ref(0)
@@ -61,6 +62,18 @@ const PmDownload = async () => {
   })
   exportExcel(DownloadData,'PM数据.xlsx')
 }
+const UpdateData = async () => {
+  await ElMessageBox.confirm('你确认更新吗？', '温馨提示', {
+    type: 'warning',
+    confirmButtonText: '确认',
+    cancelButtonText: '取消'
+  })
+  await PmUpdateDataService()
+  ElMessage({
+    message: '数据更新完成！',
+    type: 'success',
+  })
+}
 const handleSelectionChange =(val) => {
   DownloadData.value = val
 }
@@ -71,6 +84,7 @@ const handleSelectionChange =(val) => {
   <page-container title="PM推送">
     <template #extra>
       <el-button @click="PmDownload">导出Excel</el-button>
+      <el-button @click="UpdateData">更新数据</el-button>
     </template>
     <el-form inline>
       <el-form-item label="区域:">

@@ -20,7 +20,7 @@ const TableData = ref({})
       </slot>
 
         <!-- row 就是 channelList 的一项， $index 下标 -->
-      <el-table-column label="操作" width="100" align="center" >
+      <el-table-column label="操作" width="150" align="center" >
         <template #default="scope">
           <slot name="operate" :row="scope.row" :index="scope.$index"></slot>
         </template>
