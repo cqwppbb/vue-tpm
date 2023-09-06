@@ -3,7 +3,7 @@ import {ref} from 'vue'
 import PmEdit from '@/views/pm/components/PmEdit.vue'
 import PmData from '@/views/pm/components/PmData.vue'
 import {Delete, Edit, Plus} from '@element-plus/icons-vue'
-import {PmDataService, PmDeleteService, PmEditService} from "@/api/pm";
+import {PmDataService,PmDeleteService} from '@/api/pm'
 import {exportExcel} from "../../utils/exportExcle";
 
 const PmList = ref([])
@@ -12,6 +12,58 @@ const loading = ref(false)
 const PmTable = ref()
 const dialog = ref()
 const area = ref('')
+const area_options =ref([
+    {id:1,label:'CH'},
+    {id:2,label:'CB'},
+    {id:3,label:'CS'},
+    {id:4,label:'AS'},
+])
+const OnAreaChange =() =>{
+  GetPmData()
+  if (area.value =='CH'){
+    machine_options.value =[
+        {id:1,label:'加工中心',    value:'ch_cnc'},
+        {id:2,label:'中间清洗机',  value:'ch_fine'},
+        {id:3,label:'最终清洗机',  value:'ch_abb'},
+        {id:4,label:'中间试漏机',  value:'ch_mid_leak'},
+        {id:5,label:'最终试漏机',  value:'ch_final_leak'},
+        {id:6,label:'压装机',     value:'ch_jwf'},
+        {id:7,label:'拧紧机',     value:'ch_nut'},
+        {id:8,label:'海门',       value:'ch_hm'},
+        {id:9,label:'上下料机器人',value:'ch_load'},
+        {id:10,label:'打标机',     value:'ch_marking'},
+        {id:11,label:'辊道',       value:'ch_conv'},
+    ]
+  }else if(area.value == 'CB'){
+    machine_options.value =[
+        {id:1,label:'加工中心',    value:'cb_cnc'},
+        {id:2,label:'中间清洗机',  value:'cb_fine'},
+        {id:3,label:'最终清洗机',  value:'cb_abb'},
+        {id:4,label:'中间试漏机',  value:'cb_mid_leak'},
+        {id:5,label:'最终试漏机',  value:'cb_final_leak'},
+        {id:6,label:'珩磨机',     value:'cb_fuji'},
+        {id:7,label:'拧紧机',     value:'cb_nut'},
+        {id:8,label:'海门',       value:'cb_hm'},
+        {id:9,label:'上下料机器人',value:'cb_load'},
+        {id:10,label:'打标机',     value:'cb_marking'},
+        {id:11,label:'辊道',       value:'cb_conv'},
+        {id:12,label:'吊具',       value:'cb_dj'},
+    ]
+  }else if(area.value =='CS'){
+    machine_options.value =[
+        {id:1,label:'预留',    value:'cb_cnc'},
+    ]
+  }else if(area.value =='AS'){
+    machine_options.value =[
+        {id:1,label:'预留',    value:'cb_cnc'},
+    ]
+  }
+}
+const machine = ref('')
+const machine_options = ref([])
+const OnMachineChange = () =>{
+  GetPmData()
+}
 const station = ref('')
 const params = ref({
   pagenum: 1,
@@ -25,6 +77,7 @@ const DownloadData = ref([])
 const GetPmData = async () => {
   loading.value = true
   params.value.area = area.value
+  params.value.machine = machine.value
   params.value.station = station.value
   const res = await PmDataService(params.value)
   PmList.value = res.data.data
@@ -32,18 +85,28 @@ const GetPmData = async () => {
   loading.value = false
 }
 GetPmData()
-const onPmEdit = async (data) => {
-  data.index
-  dialog.value.open(data.row)
-  await PmDeleteService(data.row)
 
+const onPmEdit = async (data) => {
+  data.row.msg = 'edit'
+  await dialog.value.open(data.row)
+
+
+  GetPmData()
+}
+const onPmAdd = async (data) => {
+  data.row.msg = 'add'
+  await dialog.value.open(data.row)
+  GetPmData()
 }
 const onPmDelete = async (data) => {
-  data.index
-
-  console.log(data.index)
-  console.log('删除PM')
-  await PmEditService(data.index)
+  await ElMessageBox.confirm('你确认删除此条PM吗？', '温馨提示', {
+    type: 'warning',
+    confirmButtonText: '确认',
+    cancelButtonText: '取消'
+  })
+  await PmDeleteService(data.row)
+  GetPmData()
+  ElMessage.success('删除成功')
 }
 
 const formConfirm = async () => {
@@ -71,7 +134,9 @@ const PmDownload = async () => {
 const handleSelectionChange = (val) => {
   DownloadData.value = val
 }
-
+const onSuccess = () => {
+    GetPmData()
+  }
 </script>
 
 <template>
@@ -81,14 +146,26 @@ const handleSelectionChange = (val) => {
     </template>
     <el-form inline>
       <el-form-item label="区域:">
-        <el-select v-model="area">
-          <el-option label="CB" value="block"></el-option>
-          <el-option label="CH" value="head"></el-option>
-          <el-option label="CS" value="crank"></el-option>
-          <el-option label="AS" value="as"></el-option>
+        <el-select @change="OnAreaChange" v-model="area">
+          <el-option
+          v-for = 'item in area_options'
+          :key = 'item.id'
+          :label = 'item.label'
+          :value = 'item.label'
+          ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="设备:">
+      <el-form-item  label="设备:">
+        <el-select @change="OnMachineChange" v-model="machine">
+          <el-option
+          v-for = 'item in machine_options'
+          :key = 'item.id'
+          :label = 'item.label'
+          :value = 'item.value'
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="工位:">
         <el-input v-model="station" placeholder="输入设备OP">
         </el-input>
       </el-form-item>
@@ -112,6 +189,7 @@ const handleSelectionChange = (val) => {
             circle
             plain
             type="primary"
+
             @click="onPmEdit(data)"
         ></el-button>
         <el-button
@@ -142,7 +220,7 @@ const handleSelectionChange = (val) => {
         @size-change="onSizeChange"
         @current-change="onCurrentChange"
     />
-    <PmEdit ref="dialog"></PmEdit>
+    <PmEdit @success="onSuccess" ref="dialog"></PmEdit>
   </page-container>
 </template>
 

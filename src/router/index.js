@@ -29,11 +29,11 @@ const router = createRouter({
         },
         {
           path: '/pm/record',
-          component: () => import('@/views/pm/PmRecord.vue')
+          component: () => import('@/views/pm/PmModifyRecord.vue')
         },
         {
           path: '/pm/status',
-          component: () => import('@/views/pm/PmStatus.vue')
+          component: () => import('@/views/pm/PmFinishRecord.vue')
         },
         {
           path: '/user/profile',

@@ -52,7 +52,7 @@ const handleCommand = async (key) => {
 						<el-icon>
 							<List />
 						</el-icon>
-						<span>PM状态</span>
+						<span>PM完成记录</span>
 					</el-menu-item>
 					<el-menu-item index="/pm/modify">
 						<el-icon>

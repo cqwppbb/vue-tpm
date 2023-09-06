@@ -12,7 +12,7 @@ const TableData = ref({})
       <el-table-column type="index" label="序号" width="80" align="center"></el-table-column>
       <el-table-column prop="area" label="区域" width="80" align="center"></el-table-column>
       <el-table-column prop="station" width="120" label="设备" align="center"></el-table-column>
-      <el-table-column prop="item" label="PM编号" width="80" align="center"></el-table-column>
+      <el-table-column prop="item" label="PM编号" width="100" align="center"></el-table-column>
   <el-table-column label="内容" prop="detail" align="center"></el-table-column>
       <el-table-column prop="frequency" width="80" label="频次" align="center"></el-table-column>
       <el-table-column prop="type" width="80" label="类型" align="center"></el-table-column>
