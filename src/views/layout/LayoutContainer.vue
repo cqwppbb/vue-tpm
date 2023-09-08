@@ -1,5 +1,5 @@
 <script setup>
-import { Menu, Aim, View, List, Edit, UserFilled, User, EditPen, SwitchButton, CaretBottom } from '@element-plus/icons-vue';
+import { Menu, Aim, View, List, Edit, User, SwitchButton, CaretBottom } from '@element-plus/icons-vue';
 import { useUserStore } from '@/stores';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
@@ -67,41 +67,41 @@ const handleCommand = async (key) => {
 						<span>PM更改记录</span>
 					</el-menu-item>
 				</el-sub-menu>
-				<el-sub-menu index="/user">
-					<!-- 多级菜单的标题 - 具名插槽 title -->
-					<template #title>
-						<el-icon>
-							<UserFilled />
-						</el-icon>
-						<span>个人中心</span>
-					</template>
+<!--				<el-sub-menu index="/user">-->
+<!--					&lt;!&ndash; 多级菜单的标题 - 具名插槽 title &ndash;&gt;-->
+<!--					<template #title>-->
+<!--						<el-icon>-->
+<!--							<UserFilled />-->
+<!--						</el-icon>-->
+<!--						<span>个人中心</span>-->
+<!--					</template>-->
 
-					<!-- 展开的内容 - 默认插槽 -->
-					<el-menu-item index="/user/profile">
-						<el-icon>
-							<User />
-						</el-icon>
-						<span>基本资料</span>
-					</el-menu-item>
-					<el-menu-item index="/user/password">
-						<el-icon>
-							<EditPen />
-						</el-icon>
-						<span>重置密码</span>
-					</el-menu-item>
-				</el-sub-menu>
+<!--					&lt;!&ndash; 展开的内容 - 默认插槽 &ndash;&gt;-->
+<!--					<el-menu-item index="/user/profile">-->
+<!--						<el-icon>-->
+<!--							<User />-->
+<!--						</el-icon>-->
+<!--						<span>基本资料</span>-->
+<!--					</el-menu-item>-->
+<!--					<el-menu-item index="/user/password">-->
+<!--						<el-icon>-->
+<!--							<EditPen />-->
+<!--						</el-icon>-->
+<!--						<span>重置密码</span>-->
+<!--					</el-menu-item>-->
+<!--				</el-sub-menu>-->
 			</el-menu>
 		</el-aside>
 		<el-container>
 			<el-header>
-				<div>
-<!--					用户：<strong>{{ userStore.user.nickname || userStore.user.username }}</strong>-->
-          {{userStore.user.username}}
-				</div>
+        <div></div>
 				<el-dropdown placement="bottom-end" @command="handleCommand">
 					<!-- 展示给用户，默认看到的 -->
+
 					<span class="el-dropdown__box">
+            <span >{{userStore.user}}</span>
 						<el-icon :size="25">
+
 							<User></User>
 						</el-icon>
 						<el-icon>
@@ -112,8 +112,8 @@ const handleCommand = async (key) => {
 					<!-- 折叠的下拉部分 -->
 					<template #dropdown>
 						<el-dropdown-menu>
-							<el-dropdown-item command="profile" :icon="User">基本资料</el-dropdown-item>
-							<el-dropdown-item command="password" :icon="EditPen">重置密码</el-dropdown-item>
+<!--							<el-dropdown-item command="profile" :icon="User">基本资料</el-dropdown-item>-->
+<!--							<el-dropdown-item command="password" :icon="EditPen">重置密码</el-dropdown-item>-->
 							<el-dropdown-item command="logout" :icon="SwitchButton">退出登录</el-dropdown-item>
 						</el-dropdown-menu>
 					</template>
@@ -167,7 +167,9 @@ const handleCommand = async (key) => {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-
+    .div{
+      background:red;
+    }
 		.el-dropdown__box {
 			background-color: rgb(254, 254, 254);
 			display: flex;
