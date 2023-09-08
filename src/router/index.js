@@ -1,6 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { useUserStore } from '@/stores'
-
+import {createRouter, createWebHistory} from 'vue-router'
 
 
 // createRouter 创建路由实例
@@ -17,7 +15,7 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/views/layout/LayoutContainer.vue'),
-      redirect: '/pm/push',
+        redirect: '/user/profile',
       children: [
         {
           path: '/pm/modify',
@@ -47,7 +45,7 @@ const router = createRouter({
     }
   ]
 })
-
+//
 // 登录访问拦截 => 默认是直接放行的
 // 根据返回值决定，是放行还是拦截
 // 返回值：

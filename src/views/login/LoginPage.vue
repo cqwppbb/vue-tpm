@@ -1,9 +1,10 @@
 <script setup>
-import { userLoginService } from '@/api/user.js'
-import { User, Lock } from '@element-plus/icons-vue'
-import { ref, watch } from 'vue'
-import { useUserStore } from '@/stores'
-import { useRouter } from 'vue-router'
+import {userLoginService} from "../../api/user";
+import {Lock, User} from '@element-plus/icons-vue'
+import {ref, watch} from 'vue'
+import {useUserStore} from '@/stores'
+import {useRouter} from 'vue-router'
+
 const reset = ref(false)
 const form = ref()
 
@@ -11,7 +12,6 @@ const form = ref()
 const formModel = ref({
   username: '',
   password: '',
-  repassword: ''
 })
 
 const rules = {
@@ -53,9 +53,16 @@ const router = useRouter()
 const login = async () => {
   await form.value.validate()
   const res = await userLoginService(formModel.value)
-  userStore.setToken(res.data.token)
-  ElMessage.success('登录成功')
-  router.push('/')
+  const msg = res.data.msg
+  console.log(msg)
+  if (msg === '登录成功') {
+    userStore.setToken(res.data.token)
+    ElMessage.success('登录成功')
+    router.push('/')
+  } else {
+    ElMessage.error(msg)
+  }
+
 }
 
 // 重置表单内容
@@ -63,7 +70,6 @@ watch(reset, () => {
   formModel.value = {
     username: '',
     password: '',
-    repassword: ''
   }
 })
 </script>

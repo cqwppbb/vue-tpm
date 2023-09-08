@@ -1,12 +1,12 @@
 import request from '@/utils/request'
 
-// 注册接口
-export const userRegisterService = ({ username, password, repassword }) =>
-  request.post('/api/reg', { username, password, repassword })
+export const userLoginService = (data) => request.post('/login', data)
+export const userLogoutService = () => request.get('user/logout')
 
-// 登录接口
-export const userLoginService = ({ username, password }) =>
-  request.post('/api/login', { username, password })
+export const userRegisterService = (data) => request.post('/user/register', data)
+export const userChangePasswordService = (data) => request.post('/user/changepassword', data)
+
+
 
 // 获取用户基本信息
-export const userGetInfoService = () => request.get('/api/userinfo')
+export const userGetInfoService = () => request.get('/user/userinfo')
