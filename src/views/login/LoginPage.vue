@@ -53,14 +53,13 @@ const router = useRouter()
 const login = async () => {
   await form.value.validate()
   const res = await userLoginService(formModel.value)
-  const msg = res.data.msg
-  console.log(msg)
-  if (msg === '登录成功') {
-    userStore.setToken(res.data.token)
+  const token = res.data.access
+  if (res) {
+    userStore.setToken(token)
     ElMessage.success('登录成功')
     router.push('/')
   } else {
-    ElMessage.error(msg)
+    ElMessage.error('登录失败')
   }
 
 }

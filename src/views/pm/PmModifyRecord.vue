@@ -1,7 +1,8 @@
 <script setup>
 import {ref} from 'vue'
 import PmEdit from '@/views/pm/components/PmEdit.vue'
-import {PmModifyRecordService} from '@/api/pm'
+import PmData from '@/views/pm/components/PmData.vue'
+import {PmModifyRecordService} from '../../api/pm'
 import {exportExcel} from "../../utils/exportExcle";
 
 const PmList = ref([])
@@ -17,7 +18,7 @@ const area_options =ref([
     {id:4,label:'AS'},
 ])
 const OnAreaChange =() =>{
-  GetPmModifyRecord()
+  GetPmData()
   if (area.value =='CH'){
     machine_options.value =[
         {id:1,label:'加工中心',    value:'ch_cnc'},
@@ -60,43 +61,40 @@ const OnAreaChange =() =>{
 const machine = ref('')
 const machine_options = ref([])
 const OnMachineChange = () =>{
-  GetPmModifyRecord()
+  GetPmData()
 }
 const station = ref('')
 const params = ref({
-  pagenum: 1,
-  pagesize: 10,
-  id: '',
-  state: '',
-  area: '',
-  station: '',
+  page: 1,
+  size: 10,
 })
 const DownloadData = ref([])
-const GetPmModifyRecord = async () => {
+const GetPmData = async () => {
   loading.value = true
   params.value.area = area.value
   params.value.machine = machine.value
   params.value.station = station.value
   const res = await PmModifyRecordService(params.value)
-  PmList.value = res.data.data
-  PmTotal.value = res.data.total
+  PmList.value = res.data.results
+  PmTotal.value = res.data.count
   loading.value = false
 }
-GetPmModifyRecord()
+GetPmData()
+
+
 
 const formConfirm = async () => {
-  GetPmModifyRecord()
+  GetPmData()
 }
 
 const onSizeChange = (size) => {
-  params.value.pagenum = 1
-  params.value.pagesize = size
-  GetPmModifyRecord()
+  params.value.page = 1
+  params.value.size = size
+  GetPmData()
 }
 const onCurrentChange = (size) => {
-  params.value.pagenum = size
-  GetPmModifyRecord()
-  console.log('当前页页数', size)
+  params.value.page = size
+  GetPmData()
 }
 const PmDownload = async () => {
   await ElMessageBox.confirm('你确认下载吗？', '温馨提示', {
@@ -109,11 +107,13 @@ const PmDownload = async () => {
 const handleSelectionChange = (val) => {
   DownloadData.value = val
 }
-
+const onSuccess = () => {
+  GetPmData()
+}
 </script>
 
 <template>
-  <page-container title="PM更改记录">
+  <page-container title="PM更改">
     <template #extra>
       <el-button @click="PmDownload">导出Excel</el-button>
     </template>
@@ -146,36 +146,22 @@ const handleSelectionChange = (val) => {
         <el-button @click="formConfirm" type="primary">确认</el-button>
       </el-form-item>
     </el-form>
-    <el-table
+    <PmData
         @selection-change="handleSelectionChange"
         id="table" ref="PmTable"
         v-loading="loading"
         :data="PmList"
-        class="Pmdata"
-        stripe
-        border
-        style="width: 100%">
-      <el-table-column select="selected" type="selection"/>
-      <el-table-column type="index" label="序号" width="80" align="center"></el-table-column>
-      <el-table-column prop="area" label="区域" width="80" align="center"></el-table-column>
-      <el-table-column prop="station" width="120" label="设备" align="center"></el-table-column>
-      <el-table-column prop="item" label="PM编号" width="100" align="center"></el-table-column>
-      <el-table-column prop="old_detail" label="改前内容"  align="center"></el-table-column>
-      <el-table-column prop="old_frequency" label="改前频次"  width="80"  align="center"></el-table-column>
-      <el-table-column prop="old_type" width="80" label="改前类型" align="center"></el-table-column>
-      <el-table-column prop="new_detail" label="改后内容"  align="center"></el-table-column>
-      <el-table-column prop="new_frequency" label="改后频次"  width="80"  align="center"></el-table-column>
-      <el-table-column prop="new_type" width="80" label="改后类型" align="center"></el-table-column>
-      <el-table-column prop="reason" width="80" label="更改原因" align="center"></el-table-column>
+        class="Pmdata">
 
-  <template #empty>
-        <el-empty description="没有数据"></el-empty>
+
+      <template #operate>
+        <el-table-column align="center" label="修改原因" prop="notes"></el-table-column>
+        <el-table-column align="center" label="操作人员" prop="user"></el-table-column>
       </template>
-
-    </el-table>
+    </PmData>
     <el-pagination
-        v-model:current-page="params.pagenum"
-        v-model:page-size="params.pagesize"
+        v-model:current-page="params.page"
+        v-model:page-size="params.size"
         :background="true"
         :page-sizes="[10, 15, 20, 25,50,PmTotal]"
         :total="PmTotal"
@@ -185,7 +171,7 @@ const handleSelectionChange = (val) => {
         @size-change="onSizeChange"
         @current-change="onCurrentChange"
     />
-    <PmEdit ref="dialog"></PmEdit>
+    <PmEdit ref="dialog" @success="onSuccess"></PmEdit>
   </page-container>
 </template>
 

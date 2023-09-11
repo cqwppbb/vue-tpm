@@ -1,38 +1,16 @@
-import request from '@/utils/request'
+import request from '@/utils/requests'
 
-export const PmPushService = (data) => request.post('/pm/push', data)
-export const PmDataService = (data) => request.post('/pm/data', data)
-export const PmModifyRecordService = (data) => request.post('/pm/modifyrecord', data)
-export const PmFinishRecordService = (data) => request.post('/pm/finishrecord', data)
+export const PmPushService = (data) => request.get('/pm/pmpush/', {params: data})
+export const PmPushUpdateService = (data) => request.put('/pm/pmpush/' + data.id + '/', data)
+export const PmFinishRecordService = (data) => request.get('/pm/pmfinishrecord/', {params: data})
+export const PmFininshRecordCreateService = (data) => request.post('/pm/pmfinishrecord/', data)
+export const PmDataService = (data) => request.get('/pm/pmdata/', {params: data})
+export const PmEditService = (data) => request.put('/pm/pmdata/edit/', data)
+export const PmDeleteService = (data) => request.delete('/pm/pmdata/' + data.id + '/')
+export const PmAddService = (data) => request.post('/pm/pmdata/add/', data)
+export const PmModifyRecordService = (data) => request.get('/pm/pmmodifyrecord/', {params: data})
+export const PmModifyRecordPostService = (data) => request.post('/pm/pmmodifyrecord/add/', data)
 
-export const PmUpdateDataService = () => request.post('/pm/update')
-
-export const PmConfirmService = (data) => request.post('/pm/confirm', data)
-export const PmEditService = (data) => request.post('/pm/edit', data)
-export const PmDeleteService = (data) => request.post('/pm/delete', data)
-export const PmAddService = (data) => request.post('/pm/add', data)
 
 
-export const EditPmService = (data) => request.put('/my/cate/info', data)
-export const artDelChannelService = (id) => request.delete('/my/cate/del', {
-    params: {id}
-})
 
-export const artGetListService = (params) => request.get('/my/article/list', {
-    params
-})
-
-// 文章：添加文章
-// 注意：data需要是一个formData格式的对象
-export const artPublishService = (data) => request.post('/my/article/add', data)
-
-// 文章：获取文章详情
-export const artGetDetailService = (id) => request.get('/my/article/info', {
-    params: {id}
-})
-
-// 文章：编辑文章接口
-export const artEditService = (data) => request.put('/my/article/info', data)
-
-// 文章：删除文章接口
-export const artDelService = (id) => request.delete('/my/article/info', {params: {id}})

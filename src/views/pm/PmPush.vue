@@ -3,10 +3,13 @@ import {ref} from 'vue'
 import PmEdit from '@/views/pm/components/PmEdit.vue'
 import PmData from '@/views/pm/components/PmData.vue'
 import {Finished} from '@element-plus/icons-vue'
-import {PmConfirmService, PmPushService} from "@/api/pm";
+import {PmDataService, PmFininshRecordCreateService, PmPushService, PmPushUpdateService} from '../../api/pm'
 import {exportExcel} from "../../utils/exportExcle";
-import {PmUpdateDataService} from "@/api/pm";
+import {currentTime} from "../../utils/CurrentTime";
+import {useUserStore} from '@/stores';
 
+// ----------------------------------------------变量-------------------------------------------------
+const userStore = useUserStore();
 const PmList = ref([])
 const PmTotal = ref(0)
 const loading = ref(false)
@@ -19,6 +22,30 @@ const area_options =ref([
     {id:3,label:'CS'},
     {id:4,label:'AS'},
 ])
+const machine = ref('')
+const machine_options = ref([])
+const station = ref('')
+const params = ref({
+  page: 1,
+  size: 10,
+  push: 1,
+})
+
+//----------------------------------------------Request请求-------------------------------------------------
+const GetPmPush = async () => {
+  loading.value = true
+  params.value.area = area.value
+  params.value.machine = machine.value
+  params.value.station = station.value
+
+  const res = await PmPushService(params.value)
+  PmList.value = res.data.results
+  PmTotal.value = res.data.count
+  loading.value = false
+}
+GetPmPush()
+
+//----------------------------------------------按钮-------------------------------------------------
 const OnAreaChange =() =>{
   GetPmPush()
   if (area.value =='CH'){
@@ -60,50 +87,35 @@ const OnAreaChange =() =>{
     ]
   }
 }
-const machine = ref('')
-const machine_options = ref([])
 const OnMachineChange = () =>{
   GetPmPush()
 }
-const station = ref('')
-const params = ref({
-  pagenum: 1,
-  pagesize: 10,
-  id: '',
-  state: '',
-  area: '',
-  station: '',
-})
 const DownloadData = ref([])
-const GetPmPush = async () => {
-  loading.value = true
-  params.value.area = area.value
-  params.value.machine = machine.value
-  params.value.station = station.value
-  const res = await PmPushService(params.value)
-  PmList.value = res.data.data
-  PmTotal.value = res.data.total
-  loading.value = false
-}
-GetPmPush()
 const onPmFinish = async (data) => {
   data.index
-  await PmConfirmService(data.row)
-
+  const dataPush = data.row
+  dataPush.push = 0
+  dataPush.done = 0
+  dataPush.val_last = data.row.val_current
+  dataPush.time_last = currentTime()
+  await PmPushUpdateService(dataPush)
+  const dataRecord = data.row
+  const user = userStore.user;
+  dataRecord.user = user
+  await PmFininshRecordCreateService(data.row)
   GetPmPush()
 }
 
 const formConfirm = async () => {
   GetPmPush()
 }
-
 const onSizeChange = (size) => {
-  params.value.pagenum = 1
-  params.value.pagesize = size
+  params.value.page = 1
+  params.value.size = size
   GetPmPush()
 }
 const onCurrentChange = (size) => {
-  params.value.pagenum = size
+  params.value.page = size
   GetPmPush()
   console.log('当前页页数', size)
 }
@@ -121,7 +133,7 @@ const UpdateData = async () => {
     confirmButtonText: '确认',
     cancelButtonText: '取消'
   })
-  await PmUpdateDataService()
+  await PmDataService()
   ElMessage({
     message: '数据更新完成！',
     type: 'success',
@@ -130,7 +142,6 @@ const UpdateData = async () => {
 const handleSelectionChange =(val) => {
   DownloadData.value = val
 }
-
 </script>
 
 <template>
@@ -184,8 +195,8 @@ const handleSelectionChange =(val) => {
       </template>
     </PmData>
     <el-pagination
-        v-model:current-page="params.pagenum"
-        v-model:page-size="params.pagesize"
+        v-model:current-page="params.page"
+        v-model:page-size="params.size"
         :background="true"
         :page-sizes="[10, 15, 20, 25,50,PmTotal]"
         :total="PmTotal"

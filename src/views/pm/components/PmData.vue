@@ -16,8 +16,8 @@ const TableData = ref({})
   <el-table-column label="内容" prop="detail" align="center"></el-table-column>
       <el-table-column prop="frequency" width="80" label="频次" align="center"></el-table-column>
       <el-table-column prop="type" width="80" label="类型" align="center"></el-table-column>
-      <slot name="cols">
-      </slot>
+  <!--      <slot name="cols">-->
+  <!--      </slot>-->
 
         <!-- row 就是 channelList 的一项， $index 下标 -->
       <el-table-column label="操作" width="150" align="center" >

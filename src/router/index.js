@@ -1,6 +1,6 @@
-import {createRouter, createWebHistory} from 'vue-router'
-import {useUserStore} from '@/stores'
-
+﻿import {createRouter, createWebHistory} from 'vue-router'
+// import {useUserStore} from '../stores/modules/user';
+// import router from '../routers/router';
 // createRouter 创建路由实例
 // 配置 history 模式
 // 1. history模式：createWebHistory     地址栏不带 #
@@ -15,7 +15,7 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/views/layout/LayoutContainer.vue'),
-        redirect: '/pm/push',
+        redirect: '/login',
       children: [
         {
           path: '/pm/modify',
@@ -53,10 +53,12 @@ const router = createRouter({
 // 2. false 拦回from的地址页面
 // 3. 具体路径 或 路径对象  拦截到对应的地址
 //    '/login'   { name: 'login' }
-router.beforeEach((to) => {
-  // 如果没有token, 且访问的是非登录页，拦截到登录，其他情况正常放行
-  const useStore = useUserStore()
-  if (!useStore.token && to.path !== '/login') return '/login'
-})
+// router.beforeEach((to) => {
+//   // 如果没有token, 且访问的是非登录页，拦截到登录，其他情况正常放行
+//   const userStore = useUserStore();
+//   console.log(userStore.token)
+//   if (!userStore.token && to.path !== '/login') return '/login'
+//   if (to.matched.length ===0) return '/login'
+// })
 
 export default router

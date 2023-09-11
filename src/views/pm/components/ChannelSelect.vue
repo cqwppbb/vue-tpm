@@ -1,6 +1,6 @@
 <script setup>
-import { GetPmPushService } from '@api/pm.js'
-import { ref } from 'vue'
+import {GetPmPushService} from '@api/pm.js'
+import {ref} from 'vue'
 
 defineProps({
   modelValue: {
@@ -14,7 +14,7 @@ const emit = defineEmits(['update:modelValue'])
 const channelList = ref([])
 const getChannelList = async () => {
   const res = await GetPmPushService()
-  channelList.value = res.data.data
+  channelList.value = res.data.result
 }
 getChannelList()
 </script>

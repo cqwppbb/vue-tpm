@@ -1,14 +1,19 @@
 <script setup>
-import {ref} from 'vue'
-import {PmAddService, PmDeleteService, PmEditService} from '../../../api/pm.js'
+import {onMounted, ref} from 'vue'
+import {PmAddService, PmDeleteService, PmEditService, PmModifyRecordPostService} from '../../../api/pm.js'
+import {useUserStore} from '../../../stores/modules/user';
+
+const userStore = useUserStore();
+onMounted(() => {
+  userStore.getUser();
+});
 
 const dialogEdit = ref(false)
 const dialogDelet = ref(false)
 const formRefEdit = ref()
 const formRefDelete = ref()
-const formModelEdit = ref({
-})
-const formModelDelete = ref({})
+const formModelEdit = ref({})
+const formPostData = ref({})
 const rules = {
   item: [
     {required: true, message: '请输入PM标签', trigger: 'blur'},
@@ -52,21 +57,39 @@ const rules = {
     }
   ]
 }
-
 const emit = defineEmits(['success'])
 const onSubmit = async () => {
   await formRefEdit.value.validate()
   const isEdit = formModelEdit.value.msg
-  if (isEdit=='edit') {
-    await PmEditService(formModelEdit.value)
-    ElMessage.success('修改成功')
+  delete formModelEdit.value.msg
+  delete formPostData.value.msg
+  formPostData.value.user = userStore.user
+  console.log(formPostData.value)
+  console.log(formModelEdit.value)
+  if (isEdit == 'edit') {
+    formPostData.value.notes = '修改'
+    const resPmEdit = await PmEditService(formModelEdit.value)
+    const resPmModifyEdit = await PmModifyRecordPostService(formPostData.value)
+
+    if (resPmEdit.status == 200) {
+      if (resPmModifyEdit.status == 200) {
+        ElMessage.success('修改成功')
+      }
+    } else {
+      ElMessage.error('修改失败！')
+    }
   } else if (isEdit == 'add') {
-    const res = await PmAddService(formModelEdit.value)
-    const msg = res.data.status
-    if (msg == 0){
-      ElMessage.success('添加成功')
-    }else if (msg == 1){
-      ElMessage.error('添加失败，PM编号不能重复！')
+    const resPmAdd = await PmAddService(formModelEdit.value)
+    formModelEdit.value.user = userStore.user
+    formModelEdit.value.notes = '新增'
+    const resPmModifyAdd = await PmModifyRecordPostService(formModelEdit.value)
+
+    if (resPmAdd.status == 200) {
+      if (resPmModifyAdd.status == 200) {
+        ElMessage.success('添加成功')
+      }
+    } else {
+      ElMessage.error('添加失败！')
     }
 
   }
@@ -74,11 +97,22 @@ const onSubmit = async () => {
   emit('success')
 }
 const onSubmitDelete = async () => {
-    await formRefDelete.value.validate()
-    await PmDeleteService(formModelDelete.value)
-    dialogDelet.value = false
-    ElMessage.success('删除成功')
-    emit('success')
+  formPostData.value.notes = '删除'
+  console.log(formModelEdit.value)
+  await formRefDelete.value.validate()
+  const PmDelete = await PmDeleteService(formModelEdit.value)
+  const PmModifyDelete = await PmModifyRecordPostService(formPostData.value)
+  dialogDelet.value = false
+  console.log(PmDelete)
+  if (PmDelete.status == 204) {
+    if (PmModifyDelete.status == 200) {
+      ElMessage.success('删除成功')
+    }
+  } else {
+    ElMessage.error('删除失败！')
+  }
+
+  emit('success')
 }
 
 // 组件对外暴露一个方法 open，基于open传来的参数，区分添加还是编辑
@@ -86,22 +120,20 @@ const onSubmitDelete = async () => {
 // open({ id, cate_name, ... })  => 表单需要渲染，说明是编辑
 // open调用后，可以打开弹窗
 const open = (row) => {
- 
+  formPostData.value = row
   row.range = 'all'
-  if (row.msg=='edit') {
-     dialogEdit.value = true
-     formModelEdit.value = {...row} // 添加 → 重置了表单内容，编辑 → 存储了需要回显的数据
+  if (row.msg == 'edit') {
+    dialogEdit.value = true
+    formModelEdit.value = {...row} // 添加 → 重置了表单内容，编辑 → 存储了需要回显的数据
   } else if (row.msg == 'add') {
-     dialogEdit.value = true
-     row.old_item =row.item;
-     row.detail = '';
-     row.frequency = ''
-     formModelEdit.value = {...row}
-  }else if(row.msg == 'delete'){
-     dialogDelet.value = true
-     formModelDelete.value = {...row}
+    dialogEdit.value = true
+    formModelEdit.value = {...row}
+    row.detail = '';
+    row.frequency = ''
+  } else if (row.msg == 'delete') {
+    dialogDelet.value = true
+    formModelEdit.value = {...row}
   }
-
 }
 
 // 向外暴露方法
@@ -124,21 +156,21 @@ defineExpose({
         label-width="100px"
         style="padding-right: 30px"
     >
-      <el-form-item label="区域"  prop="area">
+      <el-form-item label="区域" prop="area">
         <el-input
             disabled
             v-model="formModelEdit.area"
             placeholder=""
         ></el-input>
       </el-form-item>
-      <el-form-item label="设备" disabled="disabled"  prop="machine">
+      <el-form-item disabled="disabled" label="设备" prop="machine">
         <el-input
             disabled
             v-model="formModelEdit.machine"
             placeholder=""
         ></el-input>
       </el-form-item>
-      <el-form-item label="工位"  prop="station">
+      <el-form-item label="工位" prop="station">
         <el-input
             disabled
             v-model="formModelEdit.station"
@@ -147,9 +179,9 @@ defineExpose({
       </el-form-item>
       <el-form-item label="更改范围" prop="type">
         <el-radio-group v-model="formModelEdit.range" size="large">
-      <el-radio-button label="all">所有工位</el-radio-button>
-      <el-radio-button label="one">单台</el-radio-button>
-    </el-radio-group>
+          <el-radio-button label="all">所有工位</el-radio-button>
+          <el-radio-button label="one">单台</el-radio-button>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="PM编号" prop="item">
         <el-input
@@ -157,17 +189,17 @@ defineExpose({
             placeholder=""
         ></el-input>
       </el-form-item>
-      <el-form-item label="寿命" prop="frequency">
-        <el-input
+      <el-form-item label="频次" prop="frequency">
+        <el-input-number
+            type="number"
             v-model="formModelEdit.frequency"
-            placeholder=""
-        ></el-input>
+        ></el-input-number>
       </el-form-item>
       <el-form-item label="测点类型" prop="type">
         <el-radio-group v-model="formModelEdit.type" size="large">
-      <el-radio-button label="F">计数型</el-radio-button>
-      <el-radio-button label="T">计时型</el-radio-button>
-    </el-radio-group>
+          <el-radio-button label="F">计数型</el-radio-button>
+          <el-radio-button label="T">计时型</el-radio-button>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="内容" prop="detail">
         <el-input
@@ -188,13 +220,13 @@ defineExpose({
     </template>
   </el-drawer>
   <el-dialog width="500" v-model="dialogDelet" title="删除">
-    <el-form :model="formModelDelete" ref="formRefDelete">
-      <el-form-item label="更改范围" :label-width="formLabelWidth">
-        <el-select v-model="formModelDelete.range">
-          <el-option label="所有工位" value="all" />
-          <el-option label="单台" value="one" />
-        </el-select>
-      </el-form-item>
+    <el-form ref="formRefDelete" :model="formModelEdit">
+      <!--      <el-form-item label="更改范围" :label-width="formLabelWidth">-->
+      <!--        <el-select v-model="formModelEdit.range">-->
+      <!--          <el-option label="所有工位" value="all"/>-->
+      <!--          <el-option label="单台" value="one"/>-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
     </el-form>
     <template #footer>
       <span class="dialog-footer">

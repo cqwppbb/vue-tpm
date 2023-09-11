@@ -135,7 +135,7 @@ const handleCommand = async (key) => {
 
 		.el-menu {
 			background-color: rgb(255, 255, 255);
-			border-radius: 0px;
+      border-radius: 0;
 			border-top: 0.3px solid #ababcb;
 			padding: 5px;
 		}

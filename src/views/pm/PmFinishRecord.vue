@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from 'vue'
 import PmEdit from '@/views/pm/components/PmEdit.vue'
-import {PmFinishRecordService} from '@/api/pm'
+import {PmFinishRecordService} from '../../api/pm'
 import {exportExcel} from "../../utils/exportExcle";
 
 const PmList = ref([])
@@ -64,12 +64,8 @@ const OnMachineChange = () =>{
 }
 const station = ref('')
 const params = ref({
-  pagenum: 1,
-  pagesize: 10,
-  id: '',
-  state: '',
-  area: '',
-  station: '',
+  page: 1,
+  size: 10,
 })
 const DownloadData = ref([])
 const GetPmFinishRecord = async () => {
@@ -78,8 +74,8 @@ const GetPmFinishRecord = async () => {
   params.value.machine = machine.value
   params.value.station = station.value
   const res = await PmFinishRecordService(params.value)
-  PmList.value = res.data.data
-  PmTotal.value = res.data.total
+  PmList.value = res.data.results
+  PmTotal.value = res.data.count
   loading.value = false
 }
 GetPmFinishRecord()
@@ -89,12 +85,12 @@ const formConfirm = async () => {
 }
 
 const onSizeChange = (size) => {
-  params.value.pagenum = 1
-  params.value.pagesize = size
+  params.value.page = 1
+  params.value.size = size
   GetPmFinishRecord()
 }
 const onCurrentChange = (size) => {
-  params.value.pagenum = size
+  params.value.page = size
   GetPmFinishRecord()
   console.log('当前页页数', size)
 }
@@ -174,8 +170,8 @@ const handleSelectionChange = (val) => {
 
     </el-table>
     <el-pagination
-        v-model:current-page="params.pagenum"
-        v-model:page-size="params.pagesize"
+        v-model:current-page="params.page"
+        v-model:page-size="params.size"
         :background="true"
         :page-sizes="[10, 15, 20, 25,50,PmTotal]"
         :total="PmTotal"
