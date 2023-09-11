@@ -1,8 +1,9 @@
 <script setup>
-import { Menu, Aim, View, List, Edit, User, SwitchButton, CaretBottom } from '@element-plus/icons-vue';
-import { useUserStore } from '@/stores';
-import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import {Aim, CaretBottom, Edit, List, Menu, SwitchButton, User, View} from '@element-plus/icons-vue';
+import {useUserStore} from '@/stores';
+import {onMounted} from 'vue';
+import {useRouter} from 'vue-router';
+
 const userStore = useUserStore();
 const router = useRouter();
 
@@ -96,8 +97,6 @@ const handleCommand = async (key) => {
 			<el-header>
         <div></div>
 				<el-dropdown placement="bottom-end" @command="handleCommand">
-					<!-- 展示给用户，默认看到的 -->
-
 					<span class="el-dropdown__box">
             <span >{{userStore.user}}</span>
 						<el-icon :size="25">
@@ -130,7 +129,7 @@ const handleCommand = async (key) => {
 <style lang="scss" scoped>
 .layout-container {
 	height: 100vh;
-
+  width: auto;
 	.el-aside {
 		background-color: rgb(255, 255, 255);
 
@@ -167,10 +166,8 @@ const handleCommand = async (key) => {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-    .div{
-      background:red;
-    }
-		.el-dropdown__box {
+
+    .el-dropdown__box {
 			background-color: rgb(254, 254, 254);
 			display: flex;
 			align-items: center;
@@ -186,7 +183,6 @@ const handleCommand = async (key) => {
 			}
 		}
 	}
-
 	.el-footer {
 		height: auto;
 		background-color: rgb(254, 254, 254);
@@ -195,6 +191,7 @@ const handleCommand = async (key) => {
 		justify-content: center;
 		font-size: 14px;
 		color: #666;
-	}
+
+  }
 }
 </style>
