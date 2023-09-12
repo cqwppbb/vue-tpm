@@ -157,7 +157,7 @@ defineExpose({
             placeholder=""
         ></el-input>
       </el-form-item>
-      <el-form-item label="寿命" prop="frequency">
+      <el-form-item label="到期寿命" prop="frequency">
         <el-input
             v-model="formModelEdit.frequency"
             placeholder=""

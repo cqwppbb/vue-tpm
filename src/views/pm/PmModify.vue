@@ -170,7 +170,7 @@ const onSuccess = () => {
         :data="PmList"
         class="Pmdata">
       <template #cols>
-        <el-table-column prop="life" width="100" label="寿命"></el-table-column>
+        <el-table-column prop="life" width="100" label="到期寿命"></el-table-column>
       </template>
 
       <template #operate="data">

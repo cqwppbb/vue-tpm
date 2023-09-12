@@ -161,9 +161,9 @@ const handleSelectionChange = (val) => {
       <el-table-column prop="station" width="120" label="设备" align="center"></el-table-column>
       <el-table-column prop="item" label="PM编号" width="100" align="center"></el-table-column>
       <el-table-column prop="detail" label="内容"  align="center"></el-table-column>
-      <el-table-column prop="frequency" label="频次"  width="80"  align="center"></el-table-column>
+      <el-table-column prop="frequency" label="实际寿命"  width="100"  align="center"></el-table-column>
       <el-table-column prop="type" width="80" label="类型" align="center"></el-table-column>
-      <el-table-column prop="life" width="80" label="寿命" align="center"></el-table-column>
+      <el-table-column prop="life" width="100" label="到期寿命" align="center"></el-table-column>
       <el-table-column prop="user" width="80" label="人员" align="center"></el-table-column>
       <el-table-column prop="ctime" width="80" label="时间" align="center"></el-table-column>
 

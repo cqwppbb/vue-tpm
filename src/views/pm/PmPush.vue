@@ -121,7 +121,8 @@ const UpdateData = async () => {
     confirmButtonText: '确认',
     cancelButtonText: '取消'
   })
-  await PmUpdateDataService()
+  const res =await PmUpdateDataService()
+  console.log(res)
   ElMessage({
     message: '数据更新完成！',
     type: 'success',
@@ -170,7 +171,7 @@ const handleSelectionChange =(val) => {
     </el-form>
     <PmData @selection-change="handleSelectionChange" id="table" ref="PmTable" v-loading="loading" :data="PmList" class="Pmdata">
       <template #cols>
-        <el-table-column prop="life" width="100" label="寿命"></el-table-column>
+        <el-table-column prop="life" width="100" label="实际寿命"></el-table-column>
       </template>
 
       <template  #operate="data">

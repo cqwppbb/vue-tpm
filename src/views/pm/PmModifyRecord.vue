@@ -167,6 +167,7 @@ const handleSelectionChange = (val) => {
       <el-table-column prop="new_frequency" label="改后频次"  width="80"  align="center"></el-table-column>
       <el-table-column prop="new_type" width="80" label="改后类型" align="center"></el-table-column>
       <el-table-column prop="reason" width="80" label="更改原因" align="center"></el-table-column>
+      <el-table-column prop="user" width="100" label="人员" align="center"></el-table-column>
 
   <template #empty>
         <el-empty description="没有数据"></el-empty>

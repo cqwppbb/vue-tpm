@@ -5,7 +5,7 @@ export const PmDataService = (data) => request.post('/pm/data', data)
 export const PmModifyRecordService = (data) => request.post('/pm/modifyrecord', data)
 export const PmFinishRecordService = (data) => request.post('/pm/finishrecord', data)
 
-export const PmUpdateDataService = () => request.post('/pm/update')
+export const PmUpdateDataService = () => request.get('/pm/update')
 
 export const PmConfirmService = (data) => request.post('/pm/confirm', data)
 export const PmEditService = (data) => request.post('/pm/edit', data)
