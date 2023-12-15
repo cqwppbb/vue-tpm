@@ -14,7 +14,7 @@ const TableData = ref({})
       <el-table-column prop="station" width="120" label="设备" align="center"></el-table-column>
       <el-table-column prop="item" label="PM编号" width="100" align="center"></el-table-column>
   <el-table-column label="内容" prop="detail" align="center"></el-table-column>
-      <el-table-column prop="frequency" width="80" label="频次" align="center"></el-table-column>
+      <el-table-column prop="frequency" width="100" label="到期寿命" align="center"></el-table-column>
       <el-table-column prop="type" width="80" label="类型" align="center"></el-table-column>
   <!--      <slot name="cols">-->
   <!--      </slot>-->
